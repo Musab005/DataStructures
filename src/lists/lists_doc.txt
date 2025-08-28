@@ -1,5 +1,10 @@
 list.append(x)
 Add an item to the end of the list.
+# O(1) amortized
+# When there’s free space, appending is constant time.
+# If the array is full, Python allocates a bigger block (1.125x – 2x growth factor),
+# then copies all elements over → O(n) for that operation. But since resizing doesn’t happen every time,
+# the average cost per append is still O(1).
 
 list.extend(iterable)
 Extend the list by appending all the items from the iterable.
@@ -7,6 +12,8 @@ Extend the list by appending all the items from the iterable.
 list.insert(i, x)
 Insert an item at a given position. The first argument is the index of the element before which to insert,
 so a.insert(0, x) inserts at the front of the list, and a.insert(len(a), x) is equivalent to a.append(x).
+# O(n) for beginning or middle insertion
+# because all subsequent elements must shift one position to the right.
 
 list.remove(x)
 Remove the first item from the list whose value is equal to x. It raises a ValueError if there is no such item.
@@ -14,6 +21,7 @@ Remove the first item from the list whose value is equal to x. It raises a Value
 list.pop([i])
 Remove the item at the given position in the list, and return it. If no index is specified, a.pop() removes and
 returns the last item in the list. It raises an IndexError if the list is empty or the index is outside the list range.
+# O(n) for beginning/middle as all subsequent elements shift left.
 
 list.clear()
 Remove all items from the list.

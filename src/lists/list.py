@@ -1,88 +1,138 @@
 # Implement list (dynamic array)
 
-# Time complexity:
-# 1) Access/search (by index) - arr[i] = O(1)
-# 2) Append - list.append(x) = O(1) amortized
-# When there’s free space, appending is constant time.
-# If the array is full, Python allocates a bigger block (1.125x – 2x growth factor),
-# then copies all elements over → O(n) for that operation. But since resizing doesn’t happen every time,
-# the average cost per append is still O(1).
-# 4) Insert at beginning or middle - list.insert(0, x) or list.insert(i, x) = O(n) because
-# all subsequent elements must shift one position to the right.
-# 5) Pop from end - list.pop() = O(1) as it just reduces the array size by 1, no shifting.
-# 6) Pop from beginning or middle - list.pop(i) = O(n) as all subsequent elements shift left.
-# 7) Search by value - arr.index(40) or '40 in arr' = O(n) bcs its a linear scan
-
 class List:
-    def __init__(self, size):
+    def __init__(self, size=10):
         self.size = size  # total capacity available
         self.length = 0  # actual elements stored
         self.array = [None] * size
 
     def append(self, value):
+        # before appending, if already at full capacity
         if self.length >= self.size:
-            # increase size
-            self.size = 2 * self.size
-            # copy old elements
-            new_array = [None] * self.size
-            for i in range(0, len(self.array)):
-                new_array[i] = self.array[i]
-            self.array = new_array
-
-        # insert
+            self._increase_size()
+        # insert at end which has the index equal to the value of self.length
         self.array[self.length] = value
         self.length += 1
+        return
 
+    # insert value at index
+    def insert(self, index, value):
+        # before insertion, if already at full capacity
+        if self.length >= self.size:
+            self._increase_size()
+        # reversed for loop. i starts at the last element index, ends at i = index (inclusive)
+        # shift all elements to the right including the element at index
+        for i in range(self.length - 1, index - 1, -1):
+            self.array[i + 1] = self.array[i]
+        # insert at index
+        self.array[index] = value
+        self.length += 1
+        return
+
+    # remove first occurrence of value, raise valueError otherwise
+    def remove(self, value):
+        for i in range(0, self.size):
+            if self.array[i] == value:
+                # edge case = value to remove is at the last index in the array
+                if i == self.size - 1:
+                    self.array[i] = None
+                    self.length -= 1
+                    return
+
+                # value to remove is anywhere but the last index
+                # shift all elements to the left by first replacing the value to remove (at index i)
+                while i + 1 < self.size:
+                    self.array[i] = self.array[i + 1]
+                    i += 1
+                # remove the last value
+                self.array[self.length - 1] = None
+                self.length -= 1
+                return
+
+        raise ValueError
+
+    # remove element from an index and return it
     def pop(self, index=None):
-        value = self.array[index]
+        # if list is empty or index is out of range
+        if self.length == 0 or index > self.length - 1:
+            raise IndexError
+
         # if index given and is not the last index
         if index and index != self.length - 1:
+            value = self.array[index]
             i = index
-            while i + 1 <= self.size - 1:
+            # loop from the index to the right (until i+1 reaches the rightmost element)
+            # doing this way because the array might end at the last legal value with no empty cells remaining
+            # shift all elements to the left
+            while i + 1 < self.length:
                 self.array[i] = self.array[i + 1]
                 i += 1
-            self.array[self.length - 1] = None
-            return value
-        else:  # pop from end
             self.array[self.length - 1] = None
             self.length -= 1
             return value
 
-    def insert(self, index, value):
-        if self.length >= self.size:
-            # increase size
-            self.size = 2 * self.size
-            # copy old elements
-            new_array = [None] * self.size
-            for i in range(0, self.length):
-                new_array[i] = self.array[i]
-            self.array = new_array
+        # if index not given or is the last index
+        else:
+            value = self.array[index]
+            self.array[self.length - 1] = None
+            self.length -= 1
+            return value
 
-        for i in range(self.length - 1, index - 1, -1):
-            self.array[i + 1] = self.array[i]
-        self.array[index] = value
+    # remove all elements
+    def clear(self):
+        for i in range(0, self.length):
+            self.pop()
 
-    def delete(self, value):
-        for i in range(0, self.size):
-            if self.array[i] == value:
-                # edge case - last index
-                if i == self.size - 1:
-                    self.array[i] = None
-                    return 0
+    # returns the index for the first occurrence of a value
+    # optional arguments start and end: x[, start[, end]] to limit search to a subsequence
+    # always return index 0-based
+    def index(self, x, start=None, end=None):
+        if start:
+            if end:
+                self._search_value(start, end, x)
+            else:
+                self._search_value(start, self.length, x)
+        else:
+            self._search_value(0, self.length, x)
+        raise ValueError
 
-                # normal flow
-                while i + 1 < self.size:
-                    self.array[i] = self.array[i + 1]
-                    i += 1
-                return 0
+    # return number of occurrences of a value
+    def count(self, x):
+        count = 0
+        for i in range(0, self.length):
+            if self.array[i] == x:
+                count += 1
+        return count
 
-    # returns the first index given a value
-    def index(self, value):
-        for i in range(0, self.size):
+    # TODO: sort in place
+    def sort(self, *, key=None, reverse=False):
+        pass
+
+    # reverse in place
+    def reverse(self):
+        midpoint = self.length // 2
+        for i in range(0, midpoint):
+            temp = self.array[i]
+            self.array[i] = self.array[self.length - 1 - i]
+            self.array[self.length - 1 - i] = temp
+
+    # TODO: returns shallow copy
+    def copy(self):
+        return [[i] for i in self.array]
+
+    def _increase_size(self):
+        # double the size (capacity)
+        self.size = 2 * self.size
+        # copy old elements into the new bigger array
+        new_array = [None] * self.size
+        for i in range(0, self.length):
+            new_array[i] = self.array[i]
+        # assign the new array to the object
+        self.array = new_array
+
+    # helper function to find the index of a value
+    def _search_value(self, start, end, value):
+        for i in range(start, end):
             if self.array[i] == value:
                 return i
-        return -1
-
-    # get value at the specified index
-    def get(self, index):
-        return self.array[index]
+        raise ValueError
