@@ -45,24 +45,9 @@ Reverse the elements of the list in place.
 list.copy()
 Return a shallow copy of the list.
 
-# example:
-fruits = ['orange', 'apple', 'pear', 'banana', 'kiwi', 'apple', 'banana']
-fruits.count('apple')
-2
-fruits.count('tangerine')
-0
-fruits.index('banana')
-3
-fruits.index('banana', 4)  # Find next banana starting at position 4
-6
-fruits.reverse()
-fruits
-['banana', 'apple', 'kiwi', 'banana', 'pear', 'apple', 'orange']
-fruits.append('grape')
-fruits
-['banana', 'apple', 'kiwi', 'banana', 'pear', 'apple', 'orange', 'grape']
-fruits.sort()
-fruits
-['apple', 'apple', 'banana', 'banana', 'grape', 'kiwi', 'orange', 'pear']
-fruits.pop()
-'pear'
+# Dunder methods
+
+__len__(self): Should return self.length. This allows you to call len(my_list).
+__getitem__(self, index): Should return self.array[index]. This allows you to use bracket notation like my_list[3].
+__setitem__(self, index, value): Should do self.array[index] = value. Allows my_list[3] = "new_value".
+__str__(self): Should return a string representation, like [1, 2, 3]. This makes printing your object easy.
