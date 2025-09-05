@@ -9,6 +9,7 @@ class List:
     def append(self, value):
         # before appending, if already at full capacity
         if self.length >= self.size:
+            # complexity = O(n)
             self._increase_size()
         # insert at end which has the index equal to the value of self.length
         self.array[self.length] = value
@@ -89,7 +90,7 @@ class List:
     # TODO: sort in place
     def sort(self, *, key=None, reverse=False):
         if self.length > 1:
-            self._insertion_sort(key=key, reverse=reverse)
+            self._merge_sort(key=key, reverse=reverse)
 
     # reverse in place
     # '//' rounds down the quotient
@@ -164,27 +165,69 @@ class List:
         if reverse:
             self.reverse()
 
-    # O(n^2) by maintaining a sorted array
+    # O(n^2) by shifting n times for n numbers in the array
     def _insertion_sort(self, *, key=None, reverse=False):
-        sorted_array = List(self.size)
-        sorted_array.append(self.array[0])
         for i in range(1, self.length):
             curr = self.array[i]
-            shifted = False
-            for y in range(len(sorted_array)):
-                if curr < sorted_array[y]:
-                    shifted = True
-                    # shift right
-                    for z in range(len(sorted_array) - 1, y - 1, -1):
-                        sorted_array.insert(z+1, sorted_array[z])
-                    # set new value
-                    sorted_array[y] = curr
-                    break
-            if not shifted:
-                sorted_array.append(curr)
-        self.array = sorted_array
-        if reverse:
-            self.reverse()
+            # shift right
+            index = i
+            for y in range(i - 1, -1, -1):
+                if reverse:
+                    if curr > self.array[y]:
+                        self.array[y + 1] = self.array[y]
+                        index -= 1
+                else:
+                    if curr < self.array[y]:
+                        self.array[y + 1] = self.array[y]
+                        index -= 1
+            # insert
+            self.array[index] = curr
+
+    # O(nlogn)
+    def _merge_sort(self, *, key=None, reverse=False):
+        if self.length == 0:
+            return
+        unsorted_list = self.copy()
+        self.array = self._merge_sort_recurse(unsorted_list, reverse)
+        return
+
+    def _merge_sort_recurse(self, unsorted_list, reverse):
+        if len(unsorted_list) <= 1:
+            return unsorted_list
+        midpoint = len(unsorted_list) // 2
+        left_arr = unsorted_list[:midpoint]
+        right_arr = unsorted_list[midpoint:]
+        left_sorted = self._merge_sort_recurse(left_arr, reverse)
+        right_sorted = self._merge_sort_recurse(right_arr, reverse)
+        return self._merge(left_sorted, right_sorted, reverse)
+
+    def _merge(self, sorted_list_A, sorted_list_B, reverse):
+        sorted_list = List()
+        tracker_A = 0
+        tracker_B = 0
+        while tracker_A < len(sorted_list_A) and tracker_B < len(sorted_list_B):
+            if not reverse:
+                if sorted_list_A[tracker_A] <= sorted_list_B[tracker_B]:
+                    sorted_list.append(sorted_list_A[tracker_A])
+                    tracker_A += 1
+                else:
+                    sorted_list.append(sorted_list_B[tracker_B])
+                    tracker_B += 1
+            else:
+                if sorted_list_A[tracker_A] >= sorted_list_B[tracker_B]:
+                    sorted_list.append(sorted_list_A[tracker_A])
+                    tracker_A += 1
+                else:
+                    sorted_list.append(sorted_list_B[tracker_B])
+                    tracker_B += 1
+
+        if tracker_A < len(sorted_list_A):
+            for i in range(tracker_A, len(sorted_list_A)):
+                sorted_list.append(sorted_list_A[i])
+        if tracker_B < len(sorted_list_B):
+            for i in range(tracker_B, len(sorted_list_B)):
+                sorted_list.append(sorted_list_B[i])
+        return sorted_list
 
     # for printing
     def __str__(self):
@@ -199,11 +242,23 @@ class List:
 
     # allows bracket notation like my_list[3]
     def __getitem__(self, index):
-        if index < 0:
-            index += self.length
-        if not (0 <= index < self.length):
-            raise IndexError("list index out of range")
-        return self.array[index]
+        if isinstance(index, slice):
+            start_index = 0 if index.start is None else index.start
+            stop_index = self.length if index.stop is None else index.stop
+            if stop_index > self.length:
+                raise IndexError("list index out of range")
+            step = 1 if index.step is None else index.step
+            filtered_list = []
+            for i in range(start_index, stop_index, step):
+                filtered_list.append(self.array[i])
+            return filtered_list
+
+        elif isinstance(index, int):
+            if index < 0:
+                index += self.length
+            if not (0 <= index < self.length):
+                raise IndexError("list index out of range")
+            return self.array[index]
 
     # Allows my_list[3] = "new_value".
     def __setitem__(self, index, value):

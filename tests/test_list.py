@@ -136,6 +136,15 @@ class TestArrays:
         list1.sort()
         assert list1 == [1, 2, 3]
 
+    # already sorted array and array length != array size
+    def test_sort_1_1(self):
+        list1_1 = List(5)
+        list1_1.append(1)
+        list1_1.append(2)
+        list1_1.append(3)
+        list1_1.sort()
+        assert list1_1 == [1, 2, 3]
+
     # unsorted array and array length = array size
     def test_sort_2(self):
         list2 = List(5)
@@ -147,66 +156,128 @@ class TestArrays:
         list2.sort()
         assert list2 == [0, 1, 2, 3, 7]
 
-    # unsorted array with array length != array size
-    def test_sort_3(self):
-        list3 = List(10)
-        list3.append(2)
-        list3.append(3)
-        list3.append(1)
-        list3.append(0)
-        list3.append(10)
-        list3.sort()
-        assert list3 == [0, 1, 2, 3, 10]
+    # unsorted array and array length != array size
+    def test_sort_2_1(self):
+        list2_1 = List(10)
+        list2_1.append(2)
+        list2_1.append(3)
+        list2_1.append(1)
+        list2_1.append(0)
+        list2_1.append(10)
+        list2_1.sort()
+        assert list2_1 == [0, 1, 2, 3, 10]
 
     # only one value exists
+    def test_sort_3(self):
+        list3 = List(3)
+        list3.append(2)
+        list3.sort()
+        assert list3 == [2]
+
+    # empty list
     def test_sort_4(self):
         list4 = List(3)
-        list4.append(2)
         list4.sort()
-        assert list4 == [2]
+        assert list4 == []
 
     # reverse sort and array length = array size
-    def test_sort_5(self):
-        list5 = List(3)
-        list5.append(2)
-        list5.append(1)
-        list5.append(3)
-        list5.sort(reverse=True)
-        assert list5 == [3, 2, 1]
+    def test_sort_5_1(self):
+        list5_1 = List(3)
+        list5_1.append(2)
+        list5_1.append(1)
+        list5_1.append(3)
+        list5_1.sort(reverse=True)
+        assert list5_1 == [3, 2, 1]
 
     # reverse sort and array length != array size
+    def test_sort_5_2(self):
+        list5_2 = List(10)
+        list5_2.append(2)
+        list5_2.append(1)
+        list5_2.append(3)
+        list5_2.append(5)
+        list5_2.append(0)
+        list5_2.append(0)
+        list5_2.sort(reverse=True)
+        assert list5_2 == [5, 3, 2, 1, 0, 0]
+
+    # reverse sort and array already reverse sorted
+    def test_sort_5_3(self):
+        list5_3 = List(10)
+        list5_3.append(9)
+        list5_3.append(8)
+        list5_3.append(7)
+        list5_3.append(6)
+        list5_3.append(5)
+        list5_3.append(4)
+        list5_3.sort(reverse=True)
+        assert list5_3 == [9, 8, 7, 6, 5, 4]
+
+    # all equal values and array length = array size
     def test_sort_6(self):
-        list6 = List(10)
-        list6.append(2)
+        list6 = List(5)
         list6.append(1)
-        list6.append(3)
-        list6.append(5)
-        list6.append(0)
-        list6.append(0)
-        list6.sort(reverse=True)
-        assert list6 == [5, 3, 2, 1, 0, 0]
+        list6.append(1)
+        list6.append(1)
+        list6.append(1)
+        list6.append(1)
+        list6.sort()
+        assert list6 == [1, 1, 1, 1, 1]
 
-    # all equal values
-    def test_sort_7(self):
-        list7 = List(5)
-        list7.append(1)
-        list7.append(1)
-        list7.append(1)
-        list7.append(1)
-        list7.append(1)
-        list7.sort()
-        assert list7 == [1, 1, 1, 1, 1]
+    # all equal values and array length != array size
+    def test_sort_6_1(self):
+        list6_1 = List(10)
+        list6_1.append(2)
+        list6_1.append(2)
+        list6_1.append(2)
+        list6_1.append(2)
+        list6_1.append(2)
+        list6_1.sort()
+        assert list6_1 == [2, 2, 2, 2, 2]
 
-    # sort at every iteration - worst case scenario
-    def test_sort_8(self):
-        list8 = List(5)
-        list8.append(10)
-        list8.append(9)
-        list8.append(8)
-        list8.append(7)
-        list8.append(6)
-        list8.sort()
-        assert list8 == [6, 7, 8, 9, 10]
+    # sort at every iteration - worst case scenario and array length = array size
+    def test_sort_7_1(self):
+        list7_1 = List(5)
+        list7_1.append(10)
+        list7_1.append(9)
+        list7_1.append(8)
+        list7_1.append(7)
+        list7_1.append(6)
+        list7_1.sort()
+        assert list7_1 == [6, 7, 8, 9, 10]
+
+    # sort at every iteration - worst case scenario and array length != array size
+    def test_sort_7_2(self):
+        list7_2 = List(10)
+        list7_2.append(9)
+        list7_2.append(8)
+        list7_2.append(7)
+        list7_2.append(6)
+        list7_2.append(5)
+        list7_2.sort()
+        assert list7_2 == [5, 6, 7, 8, 9]
+
+    # sort at every iteration (reverse) - worst case scenario and array length = array size
+    def test_sort_8_1(self):
+        list7_1 = List(5)
+        list7_1.append(1)
+        list7_1.append(2)
+        list7_1.append(3)
+        list7_1.append(4)
+        list7_1.append(5)
+        list7_1.sort(reverse=True)
+        assert list7_1 == [5, 4, 3, 2, 1]
+
+    # sort at every iteration (reverse) - worst case scenario and array length != array size
+    def test_sort_8_2(self):
+        list7_2 = List(10)
+        list7_2.append(5)
+        list7_2.append(6)
+        list7_2.append(7)
+        list7_2.append(8)
+        list7_2.append(9)
+        list7_2.sort(reverse=True)
+        assert list7_2 == [9, 8, 7, 6, 5]
 
     # empty list
     def test_sort_9(self):
