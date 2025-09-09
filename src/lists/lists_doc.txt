@@ -1,4 +1,4 @@
-list.append(x)
+list.append(x) - DONE
 Add an item to the end of the list.
 # O(1) amortized
 # When there’s free space, appending is constant time.
@@ -6,40 +6,38 @@ Add an item to the end of the list.
 # then copies all elements over → O(n) for that operation. But since resizing doesn’t happen every time,
 # the average cost per append is still O(1).
 
-list.insert(i, x)
+list.insert(i, x) - DONE
 Insert an item at a given position. The first argument is the index of the element before which to insert,
 so a.insert(0, x) inserts at the front of the list, and a.insert(len(a), x) is equivalent to a.append(x).
-# O(n) for beginning or middle insertion
-# because all subsequent elements must shift one position to the right.
+# O(n) for beginning or middle insertion because all subsequent elements must shift one position to the right.
 
-list.remove(x)
+list.remove(x) - DONE
 Remove the first item from the list whose value is equal to x. It raises a ValueError if there is no such item.
 
-list.pop([i])
+list.pop([i]) - DONE
 Remove the item at the given position in the list, and return it. If no index is specified, a.pop() removes and
 returns the last item in the list. It raises an IndexError if the list is empty or the index is outside the list range.
 # O(n) for beginning/middle as all subsequent elements shift left.
 
-list.clear()
+list.clear() - DONE
 Remove all items from the list.
 
-list.index(x[, start[, end]])
+list.index(x[, start[, end]]) - TODO this + how printing lists with extra capacity of None's is working
 Return zero-based index in the list of the first item whose value is equal to x. Raises a ValueError if there is no such item.
-
 The optional arguments start and end are interpreted as in the slice notation and are used to limit the
 search to a particular subsequence of the list. The returned index is computed relative to the beginning of the
 full sequence rather than the start argument.
 
-list.count(x)
+list.count(x) - DONE
 Return the number of times x appears in the list.
 
-list.sort(*, key=None, reverse=False)
+list.sort(*, key=None, reverse=False) - DONE
 Sort the items of the list in place (the arguments can be used for sort customization, see sorted() for their explanation).
 
-list.reverse()
+list.reverse() - DONE
 Reverse the elements of the list in place.
 
-list.copy()
+list.copy() - DONE
 Return a shallow copy of the list.
 
 # Dunder methods

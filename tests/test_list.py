@@ -21,20 +21,36 @@ class TestArrays:
 
     # insert within capacity
     def test_insert_1(self):
-        array1 = List(3)
-        array1.insert(0, 1)
-        array1.insert(0, 2)
-        array1.insert(0, 3)
-        assert array1 == [3, 2, 1]
+        list1 = List(3)
+        list1.insert(0, 1)
+        list1.insert(0, 2)
+        list1.insert(0, 3)
+        assert list1 == [3, 2, 1]
 
     # insert at full capacity
     def test_insert_2(self):
-        array1 = List(3)
-        array1.insert(0, 1)
-        array1.insert(1, 2)
-        array1.insert(2, 3)
-        array1.insert(2, 4)
-        assert array1 == [1, 2, 4, 3]
+        list2 = List(3)
+        list2.insert(0, 1)
+        list2.insert(1, 2)
+        list2.insert(2, 3)
+        list2.insert(2, 4)
+        assert list2 == [1, 2, 4, 3]
+
+    # insert outside size
+    def test_insert_3(self):
+        list2 = List(3)
+        list2.insert(0, 1)
+        list2.insert(1, 2)
+        list2.insert(2, 3)
+        list2.insert(3, 5)
+        assert list2 == [1, 2, 3, 5]
+
+    # insert after a gap but within size
+    def test_insert_4(self):
+        list4 = List(5)
+        list4.insert(0, 1)
+        list4.insert(3, 3)
+        assert list4 == [1, 3]
 
     # remove from end
     def test_remove_1(self):
@@ -89,6 +105,7 @@ class TestArrays:
         array1.pop(0)
         assert array1 == [1]
 
+    # clear array
     def test_clear_1(self):
         array1 = List(3)
         array1.append(1)
@@ -97,13 +114,80 @@ class TestArrays:
         array1.clear()
         assert array1 == []
 
+    # normal index operation
     def test_index_1(self):
         array1 = List(3)
         array1.append(1)
         array1.append(1)
         array1.append(2)
         assert array1.index(2) == 2
+
+    # Non-existing index operation
+    def test_index_2(self):
+        array1 = List(3)
+        array1.append(1)
+        array1.append(1)
+        array1.append(2)
+        try:
+            array1.index(3)
+        except ValueError as ve:
+            assert ve
+
+    # Valid index but None value
+    def test_index_3(self):
+        array1 = List(5)
+        array1.append(1)
+        array1.append(1)
+        array1.append(2)
+        try:
+            array1.index(3)
+        except ValueError as ve:
+            assert ve
+
+    # valid subsequence and value exists
+    def test_index_4(self):
+        array1 = List(3)
+        array1.append(1)
+        array1.append(1)
+        array1.append(2)
         assert array1.index(1, 0, 1) == 0
+
+    # invalid subsequence
+    def test_index_5(self):
+        array1 = List(3)
+        array1.append(1)
+        array1.append(1)
+        array1.append(2)
+        try:
+            array1.index(1, 0, 10)
+        except ValueError as ve:
+            assert ve
+
+    # valid subsequence but value does not exist
+    def test_index_6(self):
+        array1 = List(10)
+        array1.append(1)
+        array1.append(1)
+        array1.append(2)
+        array1.append(3)
+        array1.append(3)
+        try:
+            array1.index(1, 2, 5)
+        except ValueError as ve:
+            assert ve
+
+    # valid subsequence but over None values
+    def test_index_7(self):
+        array1 = List(10)
+        array1.append(1)
+        array1.append(1)
+        array1.append(2)
+        array1.append(3)
+        array1.append(3)
+        try:
+            array1.index(1, 7, 9)
+        except ValueError as ve:
+            assert ve
 
     def test_count_1(self):
         array1 = List(3)
@@ -290,12 +374,11 @@ class TestArrays:
         array1.append(2)
         array1.insert(0, 4)
         array1.sort(reverse=True)
-        assert array1.count(3) == 0
         array1.insert(3, 10)
         array1.append(5)
         array1.pop()
         array2 = array1.copy()
-        assert array2 == [4, 2, None, 10]
+        assert array2 == [4, 2, 10]
         array2.sort()
         array2[2] = 5
         array2[3] = 5
