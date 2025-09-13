@@ -1,0 +1,21 @@
+Linked List (Singly)
+
+Essential Core Methods:
+__init__(self): Initializes an empty list. Should set self.head = None and self.size = 0. Pro Tip: Also add a self.tail = None. This will make your append method O(1) instead of O(n), a huge optimization that interviewers look for.
+prepend(self, data): Adds a new node to the beginning of the list. This is a classic O(1) operation.
+append(self, data): Adds a new node to the end of the list. This is O(1) if you track the tail, and O(n) if you don't.
+remove_first(self): Removes and returns the data from the head of the list. This is O(1). Should handle the case of an empty list.
+remove_last(self): Removes and returns the data from the tail of the list. This is an O(n) operation in a singly linked list because you have to find the second-to-last node. This is a great tradeoff to talk about.
+remove_by_value(self, data): Finds the first node with the given data and removes it. This is an O(n) operation. You need to handle three cases: the node to remove is the head, in the middle, or the tail.
+
+Helpful Utility Methods:
+search(self, data): Returns the first node containing the given data, or None if not found. O(n).
+is_empty(self): Returns True if the list is empty.
+get_size(self) or __len__(self): Returns the number of nodes in the list. O(1) because you are tracking the size.
+__str__(self): Returns a string representation of the list (e.g., "Head -> 5 -> 12 -> None"). This is invaluable for debugging.
+
+Advanced/Interview-Prep Methods:
+reverse(self): Reverses the list in-place. This is a classic and very common interview question.
+find_middle(self): Finds the middle node of the list using the "fast and slow pointer" technique.
+insert_at(self, index, data): Inserts a new node at a specific position.
+get_at(self, index): Retrieves the data at a specific position.

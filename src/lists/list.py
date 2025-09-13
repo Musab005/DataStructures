@@ -212,8 +212,16 @@ class List:
     def _merge_sort(self, *, key=None, reverse=False):
         if self.length == 0:
             return
-        unsorted_list = self.copy()
-        self.array = self._merge_sort_recurse(unsorted_list, reverse)
+        # Slicing the internal array directly is cleaner than making a full List copy.
+        # This creates a plain Python list of just the elements.
+        elements_to_sort = self.array[:self.length]
+
+        # The recursive helper function now operates on plain lists, which is clean and fast.
+        sorted_elements = self._merge_sort_recurse(elements_to_sort, reverse)
+
+        # Instead of replacing self.array, copy the sorted elements back into it.
+        for i in range(self.length):
+            self.array[i] = sorted_elements[i]
         return
 
     def _merge_sort_recurse(self, unsorted_list, reverse):
@@ -227,28 +235,33 @@ class List:
         return self._merge(left_sorted, right_sorted, reverse)
 
     def _merge(self, sorted_list_A, sorted_list_B, reverse):
+        sorted_list = []
         tracker_A = 0
         tracker_B = 0
         while tracker_A < len(sorted_list_A) and tracker_B < len(sorted_list_B):
             if not reverse:
                 if sorted_list_A[tracker_A] <= sorted_list_B[tracker_B]:
+                    sorted_list.append(sorted_list_A[tracker_A])
                     tracker_A += 1
                 else:
-                    sorted_list_A.insert(tracker_A, sorted_list_B[tracker_B])
+                    sorted_list.append(sorted_list_B[tracker_B])
                     tracker_B += 1
-                    tracker_A += 1
             else:
                 if sorted_list_A[tracker_A] >= sorted_list_B[tracker_B]:
+                    sorted_list.append(sorted_list_A[tracker_A])
                     tracker_A += 1
                 else:
-                    sorted_list_A.insert(tracker_A, sorted_list_B[tracker_B])
+                    sorted_list.append(sorted_list_B[tracker_B])
                     tracker_B += 1
-                    tracker_A += 1
+
+        if tracker_A < len(sorted_list_A):
+            for i in range(tracker_A, len(sorted_list_A)):
+                sorted_list.append(sorted_list_A[i])
 
         if tracker_B < len(sorted_list_B):
             for i in range(tracker_B, len(sorted_list_B)):
-                sorted_list_A.append(sorted_list_B[i])
-        return sorted_list_A
+                sorted_list.append(sorted_list_B[i])
+        return sorted_list
 
     # for printing
     def __str__(self):
