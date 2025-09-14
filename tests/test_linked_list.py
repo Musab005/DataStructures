@@ -3,7 +3,7 @@ import pytest
 from src.linkedlists.linked_list import LinkedList
 
 
-class Test_linked_list:
+class TestLinkedList:
 
     # simple append operations
     def test_append_1(self):
@@ -74,7 +74,6 @@ class Test_linked_list:
         list1.append(4)
         assert list1.get_at(2) == 3
 
-    # TODO: check if this is the right way to test an exception
     def test_get_at_2(self):
         list2 = LinkedList()
         list2.append(1)
@@ -151,7 +150,7 @@ class Test_linked_list:
         list3.remove_last()
         assert str(list3) == "None"
 
-    # remove by value normally
+    # remove middle value
     def test_remove_by_value_1(self):
         list1 = LinkedList()
         list1.append(1)
@@ -169,11 +168,37 @@ class Test_linked_list:
         list2.remove_by_value(9)
         assert str(list2) == "1 -> 2 -> 3 -> None"
 
+    # remove last value
+    def test_remove_by_value_3(self):
+        list3 = LinkedList()
+        list3.append(1)
+        list3.append(2)
+        list3.append(3)
+        list3.remove_by_value(3)
+        assert str(list3) == "1 -> 2 -> None"
+
+    # remove first value
+    def test_remove_by_value_4(self):
+        list4 = LinkedList()
+        list4.append(1)
+        list4.append(2)
+        list4.append(3)
+        list4.remove_by_value(1)
+        assert str(list4) == "2 -> 3 -> None"
+
     # search non-existing value
     def test_search_1(self):
+        list1 = LinkedList()
+        list1.append(1)
+        list1.append(2)
+        list1.append(3)
+        assert list1.search(10) is None
+
+    # search existing value
+    def test_search_2(self):
         list2 = LinkedList()
         list2.append(1)
         list2.append(2)
         list2.append(3)
-        assert list2.search(10) is None
+        assert list2.search(2) == LinkedList.Node(2)
 

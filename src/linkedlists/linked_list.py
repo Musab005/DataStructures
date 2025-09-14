@@ -9,37 +9,37 @@ class LinkedList:
             self.value = value
             self.next = None
 
+        # comparing value of nodes, not the next connection
+        def __eq__(self, other):
+            if isinstance(other, LinkedList.Node):
+                if other.value == self.value:
+                    return True
+            return False
+
     # Adds a new node to the beginning of the list.
     def prepend(self, value):
-        self.size += 1
         new_node = self.Node(value)
-        if not self.head:
+        if self.size == 0:
             self.head = new_node
             self.tail = new_node
         else:
             new_node.next = self.head
             self.head = new_node
+        self.size += 1
+        return
 
     # Adds a new node to the end of the list.
     # O(1) with tail node present, O(n) otherwise
     def append(self, value):
-        # self.size += 1
-        # new_node = self.Node(value)
-        # if not self.head:
-        #     self.head = new_node
-        # else:
-        #     temp = self.head
-        #     while temp.next:
-        #         temp = temp.next
-        #     # at this point temp.next is None
-        #     temp.next = new_node
-        self.size += 1
         new_node = self.Node(value)
-        if not self.head:
+        if self.size == 0:
             self.head = new_node
             self.tail = new_node
         else:
             self.tail.next = new_node
+            self.tail = new_node
+        self.size += 1
+        return
 
     # Removes and returns the data from the head of the list.
     def remove_first(self):
@@ -63,53 +63,57 @@ class LinkedList:
                 return temp.value
 
     # Removes and returns the data from the tail of the list.
-    # TODO: tail node
     def remove_last(self):
         # length = 0
         if self.size == 0:
             return
-        # length >= 1
+        # length = 1
+        elif self.size == 1:
+            self.head = None
+            value = self.tail.value
+            self.tail = None
+            self.size -= 1
+            return value
+        # length > 1
         else:
             temp = self.head
-            # if length = 1
-            if not temp.next:
-                self.head = None
-                self.size -= 1
-                return temp
-            # length > 1
-            while temp.next.next:
+            while temp.next != self.tail:
                 temp = temp.next
-            # at this point temp.next.next is None
-            # i.e. temp is the second last node in the list
-            curr = temp.next
             temp.next = None
+            value = self.tail.value
+            self.tail = temp
             self.size -= 1
-            return curr
+            return value
 
     # Finds the first node with the given data and removes it.
-    # TODO: tail node
     def remove_by_value(self, value):
         # length = 0
-        if not self.head:
+        if self.size == 0:
             return
-        # length >= 1
-        else:
-            # if length = 1
-            if not self.head.next:
-                if self.head.value == value:
-                    self.head = None
-                    self.size -= 1
+        # length = 1
+        elif self.size == 1:
+            if self.head.value == value:
+                self.head = None
+                self.tail = None
+                self.size -= 1
                 return
-            # length > 1
-            pointer1 = self.head
-            while pointer1.next:
-                pointer2 = pointer1.next
-                if pointer2.value == value:
-                    pointer1.next = pointer2.next
-                    self.size -= 1
-                    return
-                pointer1 = pointer1.next
-            return
+        # length > 1
+        else:
+            prev = self.head
+            # edge case: head needs to be removed
+            if prev.value == value:
+                self.head = prev.next
+                return
+            else:
+                curr = self.head.next
+                while curr:
+                    if curr.value == value:
+                        prev.next = curr.next
+                        self.size -= 1
+                        return
+                    prev = curr
+                    curr = curr.next
+                return
 
     # Returns the first node containing the given data, or None if not found.
     def search(self, value):
@@ -126,10 +130,7 @@ class LinkedList:
 
     # Returns True if the list is empty.
     def is_empty(self):
-        if self.size == 0:
-            return True
-        else:
-            return False
+        return self.size == 0
 
     # Returns the number of nodes in the list.
     def get_size(self):  # or __len__
@@ -139,13 +140,11 @@ class LinkedList:
     def __str__(self):
         if self.size > 0:
             temp = self.head
-            out_list = ' '
-            temp_str = out_list.join([f'{temp.value}', '->'])
-            while temp.next:
+            out_list = []
+            while temp:
+                out_list.append(str(temp.value))
                 temp = temp.next
-                temp_str = out_list.join([temp_str, f'{temp.value}', '->'])
-            temp_str = out_list.join([temp_str, 'None'])
-            return temp_str
+            return ' -> '.join(out_list) + " -> None"
         else:
             return "None"
 
@@ -198,31 +197,39 @@ class LinkedList:
     # Inserts a new node at a specific position. If index out of bounds, append at the end
     def insert_at(self, index, data):
         # empty list
-        if not self.head:
-            self.head = self.Node(data)
+        if self.size == 0:
+            return
         # index = last or out of bounds
         elif index >= self.size:
-            tail = self.head
-            # loop ends when count reaches index-1 or list ends
-            while tail.next:
-                tail = tail.next
-            tail.next = self.Node(data)
+            temp = self.head
+            # loop ends when temp is at the last node
+            while temp.next:
+                temp = temp.next
+            temp.next = self.Node(data)
+            self.tail = temp.next
+            self.size += 1
+            return
         # normal flow
         else:
             if index == 0:
                 curr = self.Node(data)
                 curr.next = self.head
                 self.head = curr
+                self.size += 1
+                return
             else:
                 count = 0
                 temp = self.head
-                # loop ends when count reaches (index-1). List wouldn't end since we ensured (index <  size) above
-                while count < index - 1: # and temp.next but no need since we are sure list wouldnt go out of bound
+                # loop ends when count = index-1. List wouldn't end since we ensured (index <  size) above
+                while count < index - 1:
                     temp = temp.next
                     count += 1
+                # temp is the node before the index to be inserted
                 next_node = temp.next
                 temp.next = self.Node(data)
                 temp.next.next = next_node
+                self.size += 1
+                return
 
     # Retrieves the data at a specific position.
     def get_at(self, index):

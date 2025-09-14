@@ -1,0 +1,6 @@
+__init__(self): Creates self.items = LinkedList()
+push(self, item): Adds an item to the top. (Use your O(1) LinkedList.prepend)
+pop(self): Removes and returns the top item. (Use your O(1) LinkedList.remove_first)
+peek(self): Returns the top item without removing it.
+is_empty(self)
+__len__(self): (Should return the size)
