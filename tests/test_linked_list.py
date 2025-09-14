@@ -1,4 +1,8 @@
+import pytest
+
 from src.linkedlists.linked_list import LinkedList
+
+
 class Test_linked_list:
 
     # simple append operations
@@ -62,7 +66,7 @@ class Test_linked_list:
         list2.append(5)
         assert list2.find_middle() == 3
 
-    def get_at_1(self):
+    def test_get_at_1(self):
         list1 = LinkedList()
         list1.append(1)
         list1.append(2)
@@ -71,13 +75,105 @@ class Test_linked_list:
         assert list1.get_at(2) == 3
 
     # TODO: check if this is the right way to test an exception
-    def get_at_2(self):
+    def test_get_at_2(self):
         list2 = LinkedList()
         list2.append(1)
         list2.append(2)
         list2.append(3)
         list2.append(4)
-        try:
+        with pytest.raises(IndexError):
             list2.get_at(199)
-        except IndexError as e:
-            raise e
+
+    # insert at middle
+    def test_insert_at_1(self):
+        list1 = LinkedList()
+        list1.append(1)
+        list1.append(2)
+        list1.append(3)
+        list1.append(4)
+        list1.insert_at(2, 3)
+        assert str(list1) == "1 -> 2 -> 3 -> 3 -> 4 -> None"
+
+    # insert at beginning
+    def test_insert_at_2(self):
+        list2 = LinkedList()
+        list2.append(1)
+        list2.append(2)
+        list2.append(3)
+        list2.append(4)
+        list2.insert_at(0, 3)
+        assert str(list2) == "3 -> 1 -> 2 -> 3 -> 4 -> None"
+
+    # insert at end/out-of-bounds
+    def test_insert_at_3(self):
+        list3 = LinkedList()
+        list3.append(1)
+        list3.append(2)
+        list3.append(3)
+        list3.append(4)
+        list3.insert_at(10, 5)
+        assert str(list3) == "1 -> 2 -> 3 -> 4 -> 5 -> None"
+
+    # remove first from empty list
+    def test_remove_first_1(self):
+        list1 = LinkedList()
+        list1.remove_first()
+        assert str(list1) == "None"
+
+    # remove first normally
+    def test_remove_first_2(self):
+        list2 = LinkedList()
+        list2.append(1)
+        list2.append(2)
+        list2.append(3)
+        list2.remove_first()
+        assert str(list2) == "2 -> 3 -> None"
+
+    # remove last from empty list
+    def test_remove_last_1(self):
+        list1 = LinkedList()
+        list1.remove_last()
+        assert str(list1) == "None"
+
+    # remove last normally
+    def test_remove_last_2(self):
+        list2 = LinkedList()
+        list2.append(1)
+        list2.append(2)
+        list2.append(3)
+        list2.remove_last()
+        assert str(list2) == "1 -> 2 -> None"
+
+    # remove last from list with one node
+    def test_remove_last_3(self):
+        list3 = LinkedList()
+        list3.append(1)
+        list3.remove_last()
+        assert str(list3) == "None"
+
+    # remove by value normally
+    def test_remove_by_value_1(self):
+        list1 = LinkedList()
+        list1.append(1)
+        list1.append(2)
+        list1.append(3)
+        list1.remove_by_value(2)
+        assert str(list1) == "1 -> 3 -> None"
+
+    # remove non-existing value
+    def test_remove_by_value_2(self):
+        list2 = LinkedList()
+        list2.append(1)
+        list2.append(2)
+        list2.append(3)
+        list2.remove_by_value(9)
+        assert str(list2) == "1 -> 2 -> 3 -> None"
+
+    # search non-existing value
+    def test_search_1(self):
+        list2 = LinkedList()
+        list2.append(1)
+        list2.append(2)
+        list2.append(3)
+        assert list2.search(10) is None
+
