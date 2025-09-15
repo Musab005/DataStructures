@@ -202,3 +202,10 @@ class TestLinkedList:
         list2.append(3)
         assert list2.search(2) == LinkedList.Node(2)
 
+    def test_iter_1(self):
+        list1 = LinkedList()
+        list1.append(1)
+        list1.append(2)
+        list1.append(3)
+        for value in list1:
+            print(value)

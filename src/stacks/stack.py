@@ -5,19 +5,22 @@ class Stack:
 
     def __init__(self):
         self.items = LinkedList()
-        self.size = 0
 
     def push(self, item):
-        pass
+        self.items.prepend(item)
 
     def pop(self):
-        pass
+        self.items.remove_first()
 
     def peek(self):
-        pass
+        return self.items.get_at(0)
 
     def is_empty(self):
-        pass
+        return self.items.is_empty()
 
     def __len__(self):
-        pass
+        return len(self.items)
+
+    def __str__(self):
+        return str(self.items)
+

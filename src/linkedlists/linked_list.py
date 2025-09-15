@@ -3,6 +3,7 @@ class LinkedList:
         self.head = None
         self.tail = None
         self.size = 0
+        self.iter_counter = 0
 
     class Node:
         def __init__(self, value):
@@ -233,12 +234,33 @@ class LinkedList:
 
     # Retrieves the data at a specific position.
     def get_at(self, index):
+        if self.size == 0 or index >= self.size:
+            raise IndexError
         count = 0
         temp = self.head
         while count < index and temp.next:
             temp = temp.next
             count += 1
-        # loop breaks if index reached or index doesn't exist
-        if count != index:
-            raise IndexError
         return temp.value
+
+    # allows use of len(list)
+    def __len__(self):
+        return self.size
+
+    # allows use of it = iter(list) -> returns an iterator object that can be given as argument to the method next(it)
+    # TODO
+    def __iter__(self):
+        return self
+
+    # TODO
+    def __next__(self, it):
+        if it.iter_counter < self.size:
+            value = it.get_at(it.iter_counter)
+            it.iter_counter += 1
+            return value
+        else:
+            raise StopIteration
+
+
+
+
