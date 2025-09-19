@@ -1,3 +1,5 @@
+import pytest
+
 from src.lists.list import List
 
 
@@ -76,10 +78,8 @@ class TestArrays:
         array1.append(1)
         array1.append(2)
         array1.append(3)
-        try:
+        with pytest.raises(ValueError):
             array1.remove(5)
-        except ValueError as ve:
-            assert ve
 
     # remove first occurrence only
     def test_remove_4(self):
@@ -128,10 +128,8 @@ class TestArrays:
         array1.append(1)
         array1.append(1)
         array1.append(2)
-        try:
+        with pytest.raises(ValueError):
             array1.index(3)
-        except ValueError as ve:
-            assert ve
 
     # Valid index but None value
     def test_index_3(self):
@@ -158,10 +156,8 @@ class TestArrays:
         array1.append(1)
         array1.append(1)
         array1.append(2)
-        try:
+        with pytest.raises(ValueError):
             array1.index(1, 0, 10)
-        except ValueError as ve:
-            assert ve
 
     # valid subsequence but value does not exist
     def test_index_6(self):
@@ -171,10 +167,8 @@ class TestArrays:
         array1.append(2)
         array1.append(3)
         array1.append(3)
-        try:
+        with pytest.raises(ValueError):
             array1.index(1, 2, 5)
-        except ValueError as ve:
-            assert ve
 
     # valid subsequence but over None values
     def test_index_7(self):
@@ -184,10 +178,8 @@ class TestArrays:
         array1.append(2)
         array1.append(3)
         array1.append(3)
-        try:
+        with pytest.raises(ValueError):
             array1.index(1, 7, 9)
-        except ValueError as ve:
-            assert ve
 
     def test_count_1(self):
         array1 = List(3)
@@ -368,18 +360,3 @@ class TestArrays:
         list9 = List(5)
         list9.sort()
         assert list9 == []
-
-    def exhaustive_test_1(self):
-        array1 = List(5)
-        array1.append(2)
-        array1.insert(0, 4)
-        array1.sort(reverse=True)
-        array1.insert(3, 10)
-        array1.append(5)
-        array1.pop()
-        array2 = array1.copy()
-        assert array2 == [4, 2, 10]
-        array2.sort()
-        array2[2] = 5
-        array2[3] = 5
-        assert array2 == [2, 4, 5, 5]

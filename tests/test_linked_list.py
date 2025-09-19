@@ -202,10 +202,76 @@ class TestLinkedList:
         list2.append(3)
         assert list2.search(2) == LinkedList.Node(2)
 
-    def test_iter_1(self):
-        list1 = LinkedList()
-        list1.append(1)
-        list1.append(2)
-        list1.append(3)
-        for value in list1:
-            print(value)
+    # A fixture to provide an empty list for tests
+    @pytest.fixture
+    def empty_list(self):
+        return LinkedList()
+
+    # A fixture to provide a list with one item
+    @pytest.fixture
+    def single_item_list(self):
+        ll = LinkedList()
+        ll.append(10)
+        return ll
+
+    # A fixture to provide a list with multiple items
+    @pytest.fixture
+    def populated_list(self):
+        ll = LinkedList()
+        ll.append("A")
+        ll.append("B")
+        ll.append("C")
+        return ll
+
+    def test_for_loop_and_list_conversion(self, populated_list):
+        """
+        Tests if the linked list can be iterated over with a for loop
+        and if it can be correctly converted to a Python list.
+        """
+        # Create a known-correct list to compare against
+        python_list = ["A", "B", "C"]
+
+        # 1. Test by direct conversion to a list
+        # This is a concise and powerful test of the full iterator protocol
+        assert list(populated_list) == python_list
+
+        # 2. Test explicitly with a for loop
+        iterated_items = []
+        for item in populated_list:
+            iterated_items.append(item)
+
+        assert iterated_items == python_list
+
+    def test_iteration_on_empty_list(self, empty_list):
+        """
+        Tests that iterating over an empty list produces no items and exits cleanly.
+        """
+        for _ in empty_list:
+            # If this loop ever runs, something is wrong.
+            pytest.fail("Iterator for an empty list should not yield any items.")
+        # If the loop finishes without failing, the test passes.
+        assert True
+
+    def test_iteration_on_single_item_list(self, single_item_list):
+        """
+        Tests iteration on a list with exactly one item.
+        """
+        assert list(single_item_list) == [10]
+
+    def test_iterator_independence(self, populated_list):
+        """
+        Tests that two iterators created from the same list are independent.
+        This is the most important test for the iterator pattern.
+        """
+        expected_full_list = ["A", "B", "C"]
+
+        # The outer loop uses its own iterator ("walker")
+        for outer_item in populated_list:
+            # The inner loop should get a NEW, fresh iterator ("walker") every time
+            inner_items = []
+            for inner_item in populated_list:
+                inner_items.append(inner_item)
+
+            # We assert that the inner loop ALWAYS produces the full, correct list,
+            # regardless of where the outer loop's iterator is.
+            assert inner_items == expected_full_list

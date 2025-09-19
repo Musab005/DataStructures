@@ -3,7 +3,6 @@ class LinkedList:
         self.head = None
         self.tail = None
         self.size = 0
-        self.iter_counter = 0
 
     class Node:
         def __init__(self, value):
@@ -11,11 +10,32 @@ class LinkedList:
             self.next = None
 
         # comparing value of nodes, not the next connection
+        # allows use of ==
         def __eq__(self, other):
             if isinstance(other, LinkedList.Node):
                 if other.value == self.value:
                     return True
             return False
+
+    class _Iterator:
+        def __init__(self, head_node):
+            # The iterator's only state is the node it's currently looking at.
+            self.current_node = head_node
+
+        def __iter__(self):
+            # The iterator is already an iterator, so it just returns itself.
+            return self
+
+        def __next__(self):
+            # This is the O(1) magic. No loops, no get_at.
+            if not self.current_node:
+                # We've walked off the end of the list.
+                raise StopIteration
+            # Grab the value before we move on.
+            value_to_return = self.current_node.value
+            # Move our finger to the next node for the next call.
+            self.current_node = self.current_node.next
+            return value_to_return
 
     # Adds a new node to the beginning of the list.
     def prepend(self, value):
@@ -199,25 +219,19 @@ class LinkedList:
     def insert_at(self, index, data):
         # empty list
         if self.size == 0:
-            return
-        # index = last or out of bounds
-        elif index >= self.size:
-            temp = self.head
-            # loop ends when temp is at the last node
-            while temp.next:
-                temp = temp.next
-            temp.next = self.Node(data)
-            self.tail = temp.next
+            new_node = self.Node(data)
+            self.head = new_node
+            self.tail = new_node
             self.size += 1
+            return
+        # index = last or out of bounds, append at end
+        elif index >= self.size:
+            self.append(data)
             return
         # normal flow
         else:
             if index == 0:
-                curr = self.Node(data)
-                curr.next = self.head
-                self.head = curr
-                self.size += 1
-                return
+                self.prepend(data)
             else:
                 count = 0
                 temp = self.head
@@ -238,7 +252,8 @@ class LinkedList:
             raise IndexError
         count = 0
         temp = self.head
-        while count < index and temp.next:
+        # index is valid as checked at the beginning
+        while count < index:
             temp = temp.next
             count += 1
         return temp.value
@@ -248,18 +263,9 @@ class LinkedList:
         return self.size
 
     # allows use of it = iter(list) -> returns an iterator object that can be given as argument to the method next(it)
-    # TODO
     def __iter__(self):
-        return self
-
-    # TODO
-    def __next__(self, it):
-        if it.iter_counter < self.size:
-            value = it.get_at(it.iter_counter)
-            it.iter_counter += 1
-            return value
-        else:
-            raise StopIteration
+        # Whenever a for loop starts, this __iter__ method is called, and it creates a NEW iterator object.
+        return self._Iterator(self.head)
 
 
 

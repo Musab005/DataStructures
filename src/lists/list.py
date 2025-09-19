@@ -92,8 +92,10 @@ class List:
     # always return index 0-based in the original list
     # Time complexity: O(N) to search entire list given the default arguments
     def index(self, x, start=None, end=None):
-        if start:
-            if end:
+        if start is not None:
+            if end is not None:
+                if end >= self.size:
+                    raise ValueError
                 return self._search_value(start, end, x)
             else:
                 return self._search_value(start, self.length, x)
@@ -311,5 +313,4 @@ class List:
                     if self.array[i] != other[i]:
                         return False
                 return True
-
         return False

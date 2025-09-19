@@ -2,5 +2,8 @@ __init__(self): Creates self.items = LinkedList()
 enqueue(self, item): Adds an item to the back. (Use your newly refactored O(1) LinkedList.append)
 dequeue(self): Removes and returns the front item. (Use your O(1) LinkedList.remove_first)
 front(self): Returns the front item without removing it.
-is_empty(self)
-__len__(self)
+is_empty(self): Returns True if the queue is empty.
+get_size(self) or __len__(self): Returns the number of items.
+
+Question: Explain why a Linked List is better than a Python list/dynamic array for implementing a queue
+Answer: Dequeue will take O(n) time in a python list because have to shift all elements
