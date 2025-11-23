@@ -1,0 +1,15 @@
+Methods to Implement:
+
+__init__(self, size=16): Creates the internal dynamic array of a certain size.
+
+_hash(self, key): A private method that takes a key and returns an index (e.g., hash(key) % self.size).
+
+set(self, key, value) or __setitem__: Hashes the key to find the bucket index.If the bucket is empty, create a new
+Linked List there. Search the Linked List in that bucket for the key. If it exists, update the value. If it doesn't,
+append a new (key, value) pair to the Linked List.
+
+get(self, key) or __getitem__: Hashes the key to find the bucket. Searches the Linked List in that bucket for the key
+and returns its value. If not found, raise a KeyError.
+
+remove(self, key): Hashes the key, finds the bucket, and uses your LinkedList.remove_by_value to remove the (key, value)
+pair.

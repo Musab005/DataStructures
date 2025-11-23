@@ -1,11 +1,13 @@
-from src.lists.list import List
+from src.maps import map
 
 
 def main():
-    list_test = [] * 10
-    list_test.append(7)
-    list_test.insert(2, 1)
-    print(list_test)
+    map1 = map.Map()
+    map1['A'] = 7
+    map1['B'] = 8
+    map1['C'] = 9
+    print(map1)
+    # print(math.ceil(6 / -132)) - TODO: google doc
 
 
 if __name__ == "__main__":
