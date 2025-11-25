@@ -13,3 +13,9 @@ and returns its value. If not found, raise a KeyError.
 
 remove(self, key): Hashes the key, finds the bucket, and uses your LinkedList.remove_by_value to remove the (key, value)
 pair.
+
+__len__(self): Should return the total number of key-value pairs stored in the map
+
+__delitem__(self, key): This is the dunder method for the del statement (del my_map[key]). Its implementation will be identical to your remove method. This directly answers your TODO!
+
+__contains__(self, key): This is the dunder method for the in keyword (if key in my_map:). It should return True if the key exists and False otherwise.
