@@ -43,21 +43,20 @@ class Map:
     def __getitem__(self, key):
         dest_index = self._hash(key)
         curr_linked_list = self.buckets.array[dest_index]
-        if not curr_linked_list:
+        if self.count == 0:
             raise KeyError
         for pair in curr_linked_list:
             if pair[0] == key:
                 return pair[1]
         raise KeyError
 
-    # Hashes the key, finds the bucket, and uses your LinkedList.remove_by_value to remove the (key, value)
-    # pair.
-    # TODO: make it more efficient by writing a remove by key method in linked list
-    # because rn it loops to find key and then remove by value searches the entire list again!
+    # Hashes the key, finds the bucket, and uses LinkedList.remove_by_value to remove the (key, value) pair. Ideally
+    # need to be more efficient by writing a remove key value pair by key method in linked list because rn it loops
+    # to find key and then remove_by_value searches the entire linked list again for the key value pair!
     def remove(self, key):
         dest_index = self._hash(key)
         curr_linked_list = self.buckets.array[dest_index]
-        if not curr_linked_list:
+        if self.count == 0:
             raise KeyError
         for pair in curr_linked_list:
             if pair[0] == key:
@@ -84,10 +83,23 @@ class Map:
     def __len__(self):
         return self.count
 
+    # Remove this item (key value pair) from the map
     def __delitem__(self, key):
-        pass
+        self.remove(key)
 
-    def __contains__(self, item):
-        pass
+    # Return True if key exists, false otherwise
+    def __contains__(self, key):
+        dest_index = self._hash(key)
+        curr_linked_list = self.buckets.array[dest_index]
+        # using 'not curr_linked_list' here and not in other methods because of an edge case
+        # if a key is not in the map, the contains method still hashes it and finds the suitable
+        # dest index. However, the list at that index can be None but the count of the map can be > 0.
+        if not curr_linked_list or self.count == 0:
+            return False
+        for pair in curr_linked_list:
+            if pair[0] == key:
+                return True
+        return False
+
 
 
