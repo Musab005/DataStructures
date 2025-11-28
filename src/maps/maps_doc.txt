@@ -16,6 +16,8 @@ pair.
 
 __len__(self): Should return the total number of key-value pairs stored in the map
 
-__delitem__(self, key): This is the dunder method for the del statement (del my_map[key]). Its implementation will be identical to your remove method. This directly answers your TODO!
+__delitem__(self, key): This is the dunder method for the del statement (del my_map[key]).
+Its implementation will be identical to the remove method.
 
-__contains__(self, key): This is the dunder method for the in keyword (if key in my_map:). It should return True if the key exists and False otherwise.
+__contains__(self, key): This is the dunder method for the in keyword (if key in my_map:).
+It should return True if the key exists and False otherwise.

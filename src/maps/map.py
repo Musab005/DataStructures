@@ -13,7 +13,7 @@ class Map:
     # A private method that takes a key and returns an index (e.g., hash(key) % self.size).
     def _hash(self, key):
         hashed_value = hash(key)
-        dest_index = hashed_value % self.size
+        dest_index = hashed_value % self.sizeRm
         return dest_index
 
     # Hashes the given key to find the bucket index. If the bucket is empty, create a new
